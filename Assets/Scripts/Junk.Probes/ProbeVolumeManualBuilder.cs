@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿#if UNITY_EDITOR
+
+using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
@@ -14,14 +16,14 @@ public static class ProbeVolumeSelectedBuilder
     public static void BuildSelectedProbeVolumeData()
     {
         // Get the selected GameObject and its ProbeVolumePerSceneData component.
-        GameObject selectedGO = Selection.activeGameObject;
+        var selectedGO = Selection.activeGameObject;
         if (selectedGO == null)
         {
             Debug.LogError("No GameObject selected.");
             return;
         }
 
-        ProbeVolumePerSceneData perSceneData = selectedGO.GetComponent<ProbeVolumePerSceneData>();
+        var perSceneData = selectedGO.GetComponent<ProbeVolumePerSceneData>();
         if (perSceneData == null)
         {
             Debug.LogError("Selected GameObject does not have a ProbeVolumePerSceneData component.");
@@ -35,7 +37,7 @@ public static class ProbeVolumeSelectedBuilder
         var bakingSetField = typeof(UnityEngine.Rendering.ProbeVolumePerSceneData).GetField("serializedBakingSet", BindingFlags.Instance | BindingFlags.NonPublic);
         if (bakingSetField == null)
             throw new System.Exception("Failed to get serializedBakingSet field");
-        ProbeVolumeBakingSet bakingSet = (ProbeVolumeBakingSet)bakingSetField.GetValue(perSceneData);
+        var bakingSet = (ProbeVolumeBakingSet)bakingSetField.GetValue(perSceneData);
 
         //var stringGuidField = typeof(UnityEngine.Rendering.ProbeVolumePerSceneData).GetField("sceneGUID", BindingFlags.Instance | BindingFlags.NonPublic);
         string sceneGUID = perSceneData.sceneGUID;
@@ -48,13 +50,13 @@ public static class ProbeVolumeSelectedBuilder
         // Determine streaming asset mode and max SH bands.
         bool useStreamingAsset = true;//!GraphicsSettings.GetRenderPipelineSettings<ProbeVolumeGlobalSettings>().probeVolumeDisableStreamingAssets;
 
-        ProbeVolumeSHBands maxSHBands = ProbeVolumeSHBands.SphericalHarmonicsL1;
-        RenderPipelineAsset currentRP = GraphicsSettings.renderPipelineAsset;
+        var maxSHBands = ProbeVolumeSHBands.SphericalHarmonicsL1;
+        var currentRP = GraphicsSettings.defaultRenderPipeline;
         if (currentRP is IProbeVolumeEnabledRenderPipeline probeRP && probeRP.maxSHBands == ProbeVolumeSHBands.SphericalHarmonicsL2)
             maxSHBands = ProbeVolumeSHBands.SphericalHarmonicsL2;
 
         // Dictionary to hold asset GUID and its binary content.
-        Dictionary<string, byte[]> assetData = new Dictionary<string, byte[]>();
+        var assetData = new Dictionary<string, byte[]>();
 
         // Local helper to process an asset.
         void ProcessAsset(ProbeVolumeStreamableAsset asset, bool includeAsset)
@@ -142,3 +144,5 @@ public static class ProbeVolumeSelectedBuilder
         AssetDatabase.Refresh();
     }
 }
+
+#endif

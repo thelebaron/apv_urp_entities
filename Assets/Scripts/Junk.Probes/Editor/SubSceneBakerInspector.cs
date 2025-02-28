@@ -1,9 +1,11 @@
-﻿using Unity.Scenes;
+﻿#if UNITY_EDITOR
+
+using Unity.Scenes;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Editor
+namespace Junk.Probes
 {
     [CustomEditor(typeof(SubSceneBaker))]
     public class SubSceneBakerInspector : UnityEditor.Editor
@@ -15,7 +17,7 @@ namespace Editor
                 var component = target as SubSceneBaker;
                 var subScene   = component.GetComponent<SubScene>();
 #if UNITY_EDITOR
-                SceneBakerWindow.StartBake(subScene.SceneAsset);
+                SubsceneBakerWindow.StartBake(subScene.SceneAsset);
 #endif
             }
 
@@ -23,3 +25,5 @@ namespace Editor
         }
     }
 }
+
+#endif

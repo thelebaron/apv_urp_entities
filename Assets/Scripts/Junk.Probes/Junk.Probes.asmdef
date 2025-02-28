@@ -1,0 +1,26 @@
+{
+    "name": "Junk.Probes",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Entities",
+        "Unity.Collections",
+        "Unity.Mathematics",
+        "Unity.InputSystem",
+        "Unity.Burst",
+        "Unity.Entities.Graphics",
+        "Unity.Scenes",
+        "Unity.Scenes.Editor",
+        "Unity.Entities.Hybrid",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Core.Editor"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

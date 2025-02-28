@@ -102,12 +102,16 @@ namespace UnityEditor.Rendering
             }
 
             Directory.CreateDirectory(tempStreamingAssetsPath);
+            
+            Debug.Log($"PrepareForBuild: Deleted and recreated {tempStreamingAssetsPath}");
 
             s_BakingSetsProcessedLastBuild.Clear();
             foreach (var scene in buildPlayerContext.BuildPlayerOptions.scenes)
             {
                 var sceneGUID = AssetDatabase.AssetPathToGUID(scene);
                 var bakingSet = ProbeVolumeBakingSet.GetBakingSetForScene(sceneGUID);
+                
+                Debug.Log($"PrepareForBuild scenes: sceneGUID {sceneGUID}");
                 if (bakingSet != null)
                 {
                     // Already processed (different scenes can belong to the same baking set).

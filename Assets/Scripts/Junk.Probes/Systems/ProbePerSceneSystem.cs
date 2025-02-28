@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Junk.Probes;
 using Unity.Assertions;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace DefaultNamespace
+namespace Junk.Probes
 {
     //[DisableAutoCreation]
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
@@ -48,6 +49,7 @@ namespace DefaultNamespace
                 
                 // Add the component normally.
                 var probeVolumePerSceneData = go.AddComponent<UnityEngine.Rendering.ProbeVolumePerSceneData>();
+                go.AddComponent<ProbeCompanionCleanup>();
                 
                 
                 // Set internal 'serializedBakingSet' using reflection.
@@ -62,12 +64,12 @@ namespace DefaultNamespace
                 }
 
                 // Set internal 'sceneGUID' using reflection.
-                var sceneGUIDField = typeof(UnityEngine.Rendering.ProbeVolumePerSceneData)
-                    .GetField("sceneGUID", BindingFlags.Instance | BindingFlags.NonPublic);
+                var sceneGUIDField = typeof(UnityEngine.Rendering.ProbeVolumePerSceneData).GetField("sceneGUID", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (sceneGUIDField != null)
                 {
                     sceneGUIDField.SetValue(probeVolumePerSceneData, managed.SceneGUID);
                 }
+                probeVolumePerSceneData.sceneGUID = managed.SceneGUID;
 
                 var cleanupComponent = new ProbeReferenceCleanup
                 {
@@ -78,8 +80,7 @@ namespace DefaultNamespace
                 state.EntityManager.SetComponentEnabled<ProbePerSceneComponentState>(entity, true);
                 
                 ProbeReferenceVolume.instance.SetActiveBakingSet(null);
-              
-                Debug.Log($"Set active baking set:go");
+                //Debug.Log($"Set active baking set:go");
             }
 
             foreach (var (probePerScene, entity) in SystemAPI.Query<RefRO<ProbePerSceneComponentState>>().WithAll<ProbeReferenceCleanup>().WithAll<ProbePerSceneComponentData>().WithEntityAccess())
@@ -88,7 +89,7 @@ namespace DefaultNamespace
                 {
                     var managed = SystemAPI.ManagedAPI.GetComponent<ProbePerSceneComponentData>(entity);
                     ProbeReferenceVolume.instance.SetActiveBakingSet(managed.BakingSet);
-                    Debug.Log($"Set active baking set: {managed.BakingSet}");
+                    //Debug.Log($"Set active baking set: {managed.BakingSet}");
                 }
             }
             

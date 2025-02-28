@@ -17,10 +17,4 @@ public class ProbeSetLoadingTester : MonoBehaviour
         
         loadedSet = ProbeReferenceVolume.instance.currentBakingSet;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

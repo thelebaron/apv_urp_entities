@@ -1,10 +1,9 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
-using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace DefaultNamespace
+namespace Junk.Probes
 {
 
     //[DisableAutoCreation]
@@ -46,6 +45,7 @@ namespace DefaultNamespace
                 // Add the component normally.
                 var probeVolume = go.AddComponent<ProbeVolume>();
                 probeData.SetProbeVolume(probeVolume);
+                go.AddComponent<ProbeCompanionCleanup>();
                 
                 
                 var cleanupComponent = new ReferenceCleanup

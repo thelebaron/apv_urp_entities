@@ -925,7 +925,7 @@ namespace UnityEngine.Rendering
             // Unload the previous baking set.
             foreach (var data in perSceneDataList)
             {
-                Debug.Log($"Unloading {data.gameObject.scene.name} from {m_CurrentBakingSet?.name}");
+                //Debug.Log($"Unloading {data.gameObject.scene.name} from {m_CurrentBakingSet?.name}");
                 data.QueueSceneRemoval();
             }
 
@@ -934,10 +934,10 @@ namespace UnityEngine.Rendering
 
             if (m_CurrentBakingSet != null)
             {
-                Debug.Log($"Loading {m_CurrentBakingSet.name} is now active, perSceneDataList length: { perSceneDataList.Count}");
+                //Debug.Log($"Loading {m_CurrentBakingSet.name} is now active, perSceneDataList length: { perSceneDataList.Count}");
                 foreach (var perSceneData in perSceneDataList)
                 {
-                    Debug.Log($"Loading {perSceneData.gameObject.scene.name} from {m_CurrentBakingSet.name}");
+                    //Debug.Log($"Loading {perSceneData.gameObject.scene.name} from {m_CurrentBakingSet.name}");
                     perSceneData.QueueSceneLoading();
                 }
             }
@@ -1389,7 +1389,7 @@ namespace UnityEngine.Rendering
         {
             if (m_PendingScenesToBeLoaded.ContainsKey(sceneGUID))
             {
-                Debug.Log($"m_PendingScenesToBeLoaded.ContainsKey(sceneGUID.");
+                //Debug.Log($"m_PendingScenesToBeLoaded.ContainsKey(sceneGUID.");
                 m_PendingScenesToBeLoaded.Remove(sceneGUID);
             }
 
@@ -1527,9 +1527,11 @@ namespace UnityEngine.Rendering
                 }
             }
 
+            //Debug.Log($"m_PendingScenesToBeLoaded: {m_PendingScenesToBeLoaded.Count}" );
             foreach (var loadRequest in m_PendingScenesToBeLoaded)
             {
                 var sceneGUID = loadRequest.Key;
+                //Debug.Log($"sceneGUID: {sceneGUID}" );
                 if (LoadCells(loadRequest.Value.Item2) && !m_ActiveScenes.Contains(sceneGUID))
                 {
                     m_ActiveScenes.Add(sceneGUID);

@@ -106,28 +106,25 @@ namespace UnityEngine.Rendering
         
         void OnEnable()
         {
-            if (serializedBakingSet == null)
-            {
-                haveNullData = true;
-                Debug.LogError($"ProbeVolumePerSceneData: serializedBakingSet is null. Cannot RegisterPerSceneData. {gameObject.name} {gameObject.scene.name}");
-                return;
-            }
-
-            if (haveNullData)
-            {
-                hadNullData = true;
-            }
-            
             #if UNITY_EDITOR
             // check if we are changing it for a companion scene WHICH IS A BIG OOPSIE NONO
-            var oldGUID = sceneGUID;
-            var currentGUID = gameObject.scene.GetGUID();
-            if (currentGUID.Equals("00000000000000000000000000000000") && oldGUID != currentGUID)
+            var companionSceneGuid = "00000000000000000000000000000000";
+            var currentGuid        = gameObject.scene.GetGUID();
+            if (currentGuid.Equals(companionSceneGuid) && sceneGUID != currentGuid)
             {
                 //Debug.LogError($"Companion scene strikes again! {gameObject.name} {gameObject.scene.name} old guid was {oldGUID} {currentGUID}");
             }
             else
             {
+                // Initialization check, compare to empty or null
+                if (sceneGUID.Equals(""))
+                {
+                    sceneGUID = gameObject.scene.GetGUID();
+                    EditorUtility.SetDirty(this);
+                }
+                
+                // new finding: cant disable this code as this is what is used when the apv bake process creates a new perscene object and populates the guid
+                
                 // In the editor, always refresh the GUID as it may become out of date is scene is duplicated or other weird things
                 // This field is serialized, so it will be available in standalones, where it can't change anymore
                 /*var newGUID = gameObject.scene.GetGUID();
@@ -138,7 +135,19 @@ namespace UnityEngine.Rendering
                 }*/
             }
             #endif
+            
+            if (serializedBakingSet == null)
+            {
+                haveNullData = true;
+                Debug.LogError($"ProbeVolumePerSceneData: serializedBakingSet is null. Cannot RegisterPerSceneData. {gameObject.name} {gameObject.scene.name}{gameObject.hideFlags}");
+                //return;
+            }
 
+            if (haveNullData)
+            {
+                hadNullData = true;
+            }
+            
             ProbeReferenceVolume.instance.RegisterPerSceneData(this);
         }
 

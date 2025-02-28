@@ -61,10 +61,17 @@ namespace UnityEngine.Rendering
             var fullPerSceneDataList = ProbeReferenceVolume.instance.perSceneDataList;
             if (!isBakingSceneSubset)
                 return fullPerSceneDataList;
-
+            
+            // use linq to log all guids of fullPerSceneDataList;
+            {
+                var allSceneGuids       = fullPerSceneDataList.Select(data => data.sceneGUID).ToList();
+                var allSceneGuidsString = string.Join(", ", allSceneGuids);
+                Debug.Log($"DEBUG: All scene guids: {allSceneGuidsString}");
+            }
             List<ProbeVolumePerSceneData> usedPerSceneDataList = new ();
             foreach (var sceneData in fullPerSceneDataList)
             {
+                
                 if (partialBakeSceneList.Contains(ProbeReferenceVolume.GetSceneGUID(sceneData.gameObject.scene)))
                     usedPerSceneDataList.Add(sceneData);
             }
