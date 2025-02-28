@@ -10,6 +10,8 @@ public class SceneProbeSetManualLoadingTester : MonoBehaviour
     public UnityEngine.Rendering.ProbeVolumeBakingSet set;
     public bool                                       probeDebug;
     
+    public UnityEngine.Rendering.ProbeVolumeBakingSet currentLoadedSet;
+    
     [ContextMenu("Unload")]
     void Unload()
     {
@@ -32,6 +34,7 @@ public class SceneProbeSetManualLoadingTester : MonoBehaviour
         ProbeReferenceVolume.instance.SetActiveBakingSet(set);
     }
     
+
     [ContextMenu("Log Set")]
     void LogSet()
     {
@@ -46,6 +49,7 @@ public class SceneProbeSetManualLoadingTester : MonoBehaviour
             return;
         }
         
+        currentLoadedSet = ProbeReferenceVolume.instance.currentBakingSet;
         
         if(Keyboard.current.uKey.wasPressedThisFrame)
         {

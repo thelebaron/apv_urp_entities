@@ -1100,16 +1100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d016e8c54c1d9804d85fc2d8c0f8640c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ManagedData
-  Data: {fileID: 2056360462}
-  BakingSet: {fileID: 11400000, guid: 20639c6888fda73458e62e25a6c911ea, type: 2}
-  PerSceneData:
-  - {fileID: 2056765642}
-  - {fileID: 2056765642}
-  - {fileID: 2056765642}
-  PerSceneGuids:
-  - c5c12e76e34426c4c9f03e17d0ab248f
-  - c5c12e76e34426c4c9f03e17d0ab248f
-  - c5c12e76e34426c4c9f03e17d0ab248f
 --- !u!114 &2056360465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1158,6 +1148,9 @@ MonoBehaviour:
   obsoleteCellSharedDataAsset: {fileID: 0}
   obsoleteCellSupportDataAsset: {fileID: 0}
   obsoleteSerializedScenarios: []
+  haveNullData: 0
+  hadNullData: 0
+  perSceneGUIDCheck: 0
 --- !u!4 &2056765643
 Transform:
   m_ObjectHideFlags: 1

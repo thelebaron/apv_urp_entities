@@ -7,8 +7,8 @@ using UnityEngine.Rendering;
 namespace DefaultNamespace
 {
 
-    [DisableAutoCreation]
-    //[WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+    //[DisableAutoCreation]
+    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
     public partial struct ProbeVolumeSystem : ISystem
     {        
         private EntityQuery query;
@@ -19,13 +19,13 @@ namespace DefaultNamespace
             query = SystemAPI.QueryBuilder()
                 .WithAll<ProbeVolumeData>()
                 .WithDisabled<ProbeVolumeState>()
-                .WithNone<ProbeReferenceCleanup>()
+                .WithNone<ReferenceCleanup>()
                 .Build();
             
             cleanupQuery = SystemAPI.QueryBuilder()
                 .WithNone<ProbeVolumeData>()
                 .WithNone<ProbeVolumeState>()
-                .WithAll<ProbeReferenceCleanup>()
+                .WithAll<ReferenceCleanup>()
                 .Build();
         }
 
@@ -38,52 +38,36 @@ namespace DefaultNamespace
                 
                 var go      = new GameObject
                 {
-                    name = "ProbeVolume"
+                    name = "ECS ProbeVolume"
                 };
+                go.SetActive(false);
                 go.hideFlags = HideFlags.DontSave;
                 
                 // Add the component normally.
                 var probeVolume = go.AddComponent<ProbeVolume>();
                 probeData.SetProbeVolume(probeVolume);
                 
-                state.EntityManager.SetComponentEnabled<ProbeVolumeState>(entity, true);
                 
-                var cleanupComponent = new ProbeReferenceCleanup
+                var cleanupComponent = new ReferenceCleanup
                 {
                     Reference = go
                 };
                 state.EntityManager.AddComponentObject(entity, cleanupComponent);
+                go.SetActive(true);
+                state.EntityManager.SetComponentEnabled<ProbeVolumeState>(entity, true);
             }
             
             var cleanupEntities = cleanupQuery.ToEntityArray(Allocator.Temp);
             foreach (var entity in cleanupEntities)
             {
-                var managed = SystemAPI.ManagedAPI.GetComponent<ProbeReferenceCleanup>(entity);
+                var managed = SystemAPI.ManagedAPI.GetComponent<ReferenceCleanup>(entity);
                 if (managed.Reference != null)
                 {
                     Object.DestroyImmediate(managed.Reference);
                 }
-                state.EntityManager.RemoveComponent<ProbeReferenceCleanup>(entity);
+                state.EntityManager.RemoveComponent<ReferenceCleanup>(entity);
             }
-            /*
-            foreach (var (data, entity) in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<ProbeVolumeBakingSet>().WithDisabled<ProbeVolumeState>().WithEntityAccess())
-            {
-                var managed     = SystemAPI.ManagedAPI.GetComponent<ProbeVolumeBakingSet>(entity);
-
-                if (managed.Stage == 0)
-                {
-                    ProbeReferenceVolume.instance.SetActiveBakingSet(null);
-                    managed.Stage = 1;
-                    //return;
-                }
-
-                if (managed.Stage == 1 && ProbeReferenceVolume.instance.currentBakingSet==null)
-                {
-                    ProbeReferenceVolume.instance.SetActiveBakingSet(managed.BakingSet);
-                    SystemAPI.SetComponentEnabled<ProbeVolumeState>(entity, true);
-                    managed.Stage = 0;
-                }
-            }*/
+        
         }
     }
     /*
@@ -111,4 +95,9 @@ namespace DefaultNamespace
             }
         }
     }*/
+    
+    public class ReferenceCleanup : ICleanupComponentData
+    {
+        public GameObject Reference;
+    }
 }

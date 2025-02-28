@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using Unity.Assertions;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -10,8 +12,9 @@ namespace DefaultNamespace
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
     public partial struct ProbePerSceneSystem : ISystem
     {
-        private EntityQuery query;
-        private EntityQuery cleanupQuery;
+        private EntityQuery      query;
+        private EntityQuery      cleanupQuery;
+        
         public void OnCreate(ref SystemState state)
         {
             query = SystemAPI.QueryBuilder()
@@ -35,27 +38,18 @@ namespace DefaultNamespace
                 var managed = SystemAPI.ManagedAPI.GetComponent<ProbePerSceneComponentData>(entity);
                 var go      = new GameObject
                 {
-                    name = "ProbePerSceneComponentState"
+                    name      = "ECS ProbeVolumePerSceneData",
+                    hideFlags = HideFlags.DontSave
                 };
-                go.hideFlags = HideFlags.DontSave;
-
-                if (managed.BakingSet == null)
-                {
-                    Debug.Log($"BakingSet is null for entity: {entity} with SceneGUID: {managed.SceneGUID}");
-                }
-
-                { // DEBUG CRAP
-                    //var perScene = Object.FindObjectsByType<UnityEngine.Rendering.ProbeVolumePerSceneData>(FindObjectsSortMode.None);
-                    //Debug.Log($"Existing ProbeVolumePerSceneData count: {perScene.Length}");
-                    
-                    //var probeVolumeReference = ProbeReferenceVolume.instance.
-                }
-
-                Debug.Log($"BakingSet {managed.BakingSet} for entity: {entity} with SceneGUID: {managed.SceneGUID}");
+                
+                // TRES Important: if gameobject is not deactivated, onenable is called for any script added to it
+                // which causes initialization before we have a chance to set the serializedBakingSet field.
+                go.SetActive(false);
                 
                 // Add the component normally.
                 var probeVolumePerSceneData = go.AddComponent<UnityEngine.Rendering.ProbeVolumePerSceneData>();
-
+                
+                
                 // Set internal 'serializedBakingSet' using reflection.
                 var bakingSetField = typeof(UnityEngine.Rendering.ProbeVolumePerSceneData).GetField("serializedBakingSet", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (bakingSetField != null)
@@ -79,9 +73,25 @@ namespace DefaultNamespace
                 {
                     Reference = go
                 };
+                go.SetActive(true);
                 state.EntityManager.AddComponentObject(entity, cleanupComponent);
                 state.EntityManager.SetComponentEnabled<ProbePerSceneComponentState>(entity, true);
+                
+                ProbeReferenceVolume.instance.SetActiveBakingSet(null);
+              
+                Debug.Log($"Set active baking set:go");
             }
+
+            foreach (var (probePerScene, entity) in SystemAPI.Query<RefRO<ProbePerSceneComponentState>>().WithAll<ProbeReferenceCleanup>().WithAll<ProbePerSceneComponentData>().WithEntityAccess())
+            {
+                if (ProbeReferenceVolume.instance.currentBakingSet ==null)
+                {
+                    var managed = SystemAPI.ManagedAPI.GetComponent<ProbePerSceneComponentData>(entity);
+                    ProbeReferenceVolume.instance.SetActiveBakingSet(managed.BakingSet);
+                    Debug.Log($"Set active baking set: {managed.BakingSet}");
+                }
+            }
+            
             var cleanupEntities = cleanupQuery.ToEntityArray(Allocator.Temp);
             foreach (var entity in cleanupEntities)
             {
@@ -92,6 +102,7 @@ namespace DefaultNamespace
                 }
                 state.EntityManager.RemoveComponent<ProbeReferenceCleanup>(entity);
             }
+
         }
     }
 }

@@ -91,7 +91,7 @@ public struct ProbeVolumeData : IComponentData
     
 }
 
-public class ProbeVolumeBakingSet : IComponentData
+public class ProbeVolumeBakingSetData : IComponentData
 {
     public int                                        Stage;
     public UnityEngine.Rendering.ProbeVolumeBakingSet BakingSet;

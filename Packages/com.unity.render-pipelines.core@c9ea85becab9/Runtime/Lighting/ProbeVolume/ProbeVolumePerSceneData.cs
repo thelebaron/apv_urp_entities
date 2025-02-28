@@ -100,28 +100,43 @@ namespace UnityEngine.Rendering
                 ProbeReferenceVolume.instance.AddPendingSceneRemoval(sceneGUID);
         }
 
+        public bool haveNullData;
+        public bool hadNullData;
+        public bool perSceneGUIDCheck;
+        
         void OnEnable()
         {
-            #if UNITY_EDITOR
-            // In the editor, always refresh the GUID as it may become out of date is scene is duplicated or other weird things
-            // This field is serialized, so it will be available in standalones, where it can't change anymore
-            var newGUID = gameObject.scene.GetGUID();
-            if (newGUID != sceneGUID)
+            if (serializedBakingSet == null)
             {
-                sceneGUID = newGUID;
-                EditorUtility.SetDirty(this);
-            }
-            // test delete invalid guid
-            if(sceneGUID.Equals("00000000000000000000000000000000"))
-            {
-                var nullData = serializedBakingSet == null;
-                Debug.LogError($"ProbeVolumePerSceneData: Scene {gameObject.scene.name} has invalid GUID. Cannot RegisterPerSceneData. serializedBakingSet null: {nullData} {serializedBakingSet }");
-                //DestroyImmediate(gameObject);
-                gameObject.name = "ProbeVolumePerSceneData (Invalid GUID)";
-                //DestroyImmediate(gameObject);
+                haveNullData = true;
+                Debug.LogError($"ProbeVolumePerSceneData: serializedBakingSet is null. Cannot RegisterPerSceneData. {gameObject.name} {gameObject.scene.name}");
                 return;
             }
+
+            if (haveNullData)
+            {
+                hadNullData = true;
+            }
             
+            #if UNITY_EDITOR
+            // check if we are changing it for a companion scene WHICH IS A BIG OOPSIE NONO
+            var oldGUID = sceneGUID;
+            var currentGUID = gameObject.scene.GetGUID();
+            if (currentGUID.Equals("00000000000000000000000000000000") && oldGUID != currentGUID)
+            {
+                //Debug.LogError($"Companion scene strikes again! {gameObject.name} {gameObject.scene.name} old guid was {oldGUID} {currentGUID}");
+            }
+            else
+            {
+                // In the editor, always refresh the GUID as it may become out of date is scene is duplicated or other weird things
+                // This field is serialized, so it will be available in standalones, where it can't change anymore
+                /*var newGUID = gameObject.scene.GetGUID();
+                if (newGUID != sceneGUID)
+                {
+                    sceneGUID = newGUID;
+                    EditorUtility.SetDirty(this);
+                }*/
+            }
             #endif
 
             ProbeReferenceVolume.instance.RegisterPerSceneData(this);
@@ -158,11 +173,16 @@ namespace UnityEngine.Rendering
 #endif
         }
 
+        
         internal void Initialize()
         {
+            //if(serializedBakingSet == null)
+                //Debug.Log($"ProbeVolumePerSceneData: serializedBakingSet is null. sceneGUID: {sceneGUID} ");
+                
+            
             ProbeReferenceVolume.instance.RegisterBakingSet(this);
 
-            Debug.Log(sceneGUID);
+            //Debug.Log(sceneGUID);
             QueueSceneRemoval();
             QueueSceneLoading();
         }

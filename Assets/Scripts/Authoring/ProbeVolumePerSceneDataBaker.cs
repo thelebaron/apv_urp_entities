@@ -23,6 +23,7 @@ public class ProbePerSceneComponentData : IComponentData, IDisposable, ICloneabl
 {
     public string                                     SceneGUID;
     public UnityEngine.Rendering.ProbeVolumeBakingSet BakingSet;
+    public int                                       Stage;
     
     public void Dispose()
     {
@@ -37,7 +38,7 @@ public class ProbePerSceneComponentData : IComponentData, IDisposable, ICloneabl
 
 public struct ProbePerSceneComponentState : IComponentData, IEnableableComponent
 {
-    
+    public int State;
 }
 
 public class ProbeReferenceCleanup : ICleanupComponentData

@@ -1436,7 +1436,7 @@ namespace UnityEngine.Rendering
             m_PendingScenesToBeLoaded.Add(sceneGUID, (bakingSet, m_CurrentBakingSet.GetSceneCellIndexList(sceneGUID)));
             m_NeedLoadAsset = true;
             
-            Debug.Log($"Pending scene loading for {sceneGUID} with baking set {bakingSet.name}, m_NeedLoadAsset = {m_NeedLoadAsset}");
+            //Debug.Log($"Pending scene loading for {sceneGUID} with baking set {bakingSet.name}, m_NeedLoadAsset = {m_NeedLoadAsset}");
         }
 
         internal void AddPendingSceneRemoval(string sceneGUID)
