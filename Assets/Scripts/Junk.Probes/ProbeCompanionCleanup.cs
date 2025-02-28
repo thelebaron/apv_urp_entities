@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Junk.Probes
 {
-    
+    [AddComponentMenu("")]
     public class ProbeCompanionCleanup : MonoBehaviour
     {
         

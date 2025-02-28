@@ -1,0 +1,38 @@
+{
+    "name": "Unity.Scenes.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Build",
+        "Unity.Build.Classic",
+        "Unity.Collections",
+        "Unity.Entities",
+        "Unity.Entities.Hybrid",
+        "Unity.Mathematics",
+        "Unity.Mathematics.Extensions",
+        "Unity.Properties",
+        "Unity.Scenes",
+        "Unity.ScriptableBuildPipeline.Editor",
+        "Unity.Serialization",
+        "Unity.Build.DotsRuntime",
+        "Unity.Entities.Build",
+        "Unity.Build.Classic.Private",
+		"Unity.ScriptableBuildPipeline"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.scriptablebuildpipeline",
+            "expression": "2.0.0",
+            "define": "SBP_VERSION_2"
+        }
+    ],
+    "noEngineReferences": false
+}

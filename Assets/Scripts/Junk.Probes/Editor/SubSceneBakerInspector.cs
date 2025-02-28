@@ -21,7 +21,7 @@ namespace Junk.Probes
 #endif
             }
 
-            base.OnInspectorGUI();
+            //base.OnInspectorGUI();
         }
     }
 }

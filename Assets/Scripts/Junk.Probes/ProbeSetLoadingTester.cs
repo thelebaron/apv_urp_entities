@@ -9,9 +9,7 @@ public class ProbeSetLoadingTester : MonoBehaviour
     void OnEnable()
     {
         if (set == null)
-        {
             return;
-        }
         
         ProbeReferenceVolume.instance.SetActiveBakingSet(set);
         

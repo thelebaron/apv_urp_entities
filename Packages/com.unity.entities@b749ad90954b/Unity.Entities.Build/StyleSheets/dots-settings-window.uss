@@ -1,0 +1,48 @@
+﻿.sb-settings-window {
+    min-width: 300px;
+    min-height: 200px;
+    margin-top: 4px;
+    margin-left: 5px;
+    margin-right: 9px;
+}
+
+.title{
+    -unity-font-style: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.subtitle{
+    -unity-font-style: bold;
+    font-size: 13px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.body{
+    margin-left: 5px;
+}
+
+.target {
+    margin-top: 5px;
+    -unity-font-style: normal;
+}
+
+.target .unity-enum-field {
+    margin-left: 0;
+}
+
+.target .unity-enum-field__input {
+    margin-left: 110px;
+}
+
+.unity-property-field .unity-list-view__size-field {
+    min-width: 100px;
+}
+
+.target-Settings{
+    margin-left: 10px;
+    margin-top: 5px;
+    -unity-font-style: normal;
+}

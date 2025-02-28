@@ -1,7 +1,9 @@
-﻿using Unity.Collections;
+﻿using System;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Object = UnityEngine.Object;
 
 namespace Junk.Probes
 {
@@ -96,8 +98,22 @@ namespace Junk.Probes
         }
     }*/
     
-    public class ReferenceCleanup : ICleanupComponentData
+    public class ReferenceCleanup : ICleanupComponentData, IDisposable, ICloneable
     {
         public GameObject Reference;
+
+        public void Dispose()
+        {
+        #if UNITY_EDITOR
+            Object.DestroyImmediate(Reference);
+        #else
+            Object.Destroy(Reference);
+        #endif
+        }
+
+        public object Clone()
+        {
+            return new ReferenceCleanup { Reference = this.Reference };
+        }
     }
 }

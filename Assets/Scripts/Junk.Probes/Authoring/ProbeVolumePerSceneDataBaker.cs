@@ -2,6 +2,7 @@
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Object = UnityEngine.Object;
 
 public class ProbeVolumePerSceneDataBaker : Baker<ProbeVolumePerSceneData>
 {
@@ -41,7 +42,21 @@ public struct ProbePerSceneComponentState : IComponentData, IEnableableComponent
     public int State;
 }
 
-public class ProbeReferenceCleanup : ICleanupComponentData
+public class ProbeReferenceCleanup : ICleanupComponentData, IDisposable, ICloneable
 {
     public GameObject Reference;
+
+    public void Dispose()
+    {
+    #if UNITY_EDITOR
+        Object.DestroyImmediate(Reference);
+    #else
+        Object.Destroy(Reference);
+    #endif
+    }
+
+    public object Clone()
+    {
+        return new ProbeReferenceCleanup { Reference = this.Reference };
+    }
 }

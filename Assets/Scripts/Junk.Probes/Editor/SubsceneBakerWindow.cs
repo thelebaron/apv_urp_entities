@@ -112,7 +112,7 @@ namespace Junk.Probes
 
                 isBaking                 =  false;
                 EditorApplication.update -= StartBake;
-                GetWindow<SubsceneBakerWindow>()?.Close();
+                //GetWindow<SubsceneBakerWindow>()?.Close();
             }
         }
 
@@ -232,27 +232,34 @@ namespace Junk.Probes
             if (ProbeReferenceVolume.instance.perSceneDataList != null)
             {
                 var fullPerSceneDataList = ProbeReferenceVolume.instance.perSceneDataList;
-                for (var index = fullPerSceneDataList.Count - 1; index >= 0; index--)
+                // Create a copy so modifications don't interfere with iteration.
+                var listCopy = new List<ProbeVolumePerSceneData>(fullPerSceneDataList);
+                foreach (var perScene in listCopy)
                 {
-                    if (fullPerSceneDataList[index] == null)
-                        continue;
-
-                    var perScene = fullPerSceneDataList[index];
-
-                    if (perScene.gameObject.scene.name == null)
+                    if (perScene == null)
                     {
-                        Object.DestroyImmediate(perScene.gameObject);
-                        fullPerSceneDataList.RemoveAt(index);
+                        fullPerSceneDataList.Remove(perScene);
                         continue;
                     }
 
-                    if (perScene.gameObject.scene.name.Equals("CompanionScene"))
+                    // Use string.IsNullOrEmpty to check for null or empty scene name.
+                    string sceneName = perScene.gameObject.scene.name;
+                    if (string.IsNullOrEmpty(sceneName))
                     {
-                        //fullPerSceneDataList.RemoveAt(index);
-                        Debug.Log(perScene.gameObject.scene.name);
+                        //Debug.Log($"Removing perScene with null or empty scene name. List count before removal: {fullPerSceneDataList.Count}");
                         Object.DestroyImmediate(perScene.gameObject);
+                        fullPerSceneDataList.Remove(perScene);
+                        continue;
+                    }
+
+                    if (sceneName.Equals("CompanionScene"))
+                    {
+                        //Debug.Log($"Removing CompanionScene perScene. List count before removal: {fullPerSceneDataList.Count}");
+                        Object.DestroyImmediate(perScene.gameObject);
+                        fullPerSceneDataList.Remove(perScene);
                     }
                 }
+
             }
         }
 
