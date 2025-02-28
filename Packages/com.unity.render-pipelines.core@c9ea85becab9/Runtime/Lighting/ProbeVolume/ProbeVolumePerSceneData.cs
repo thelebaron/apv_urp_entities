@@ -106,6 +106,7 @@ namespace UnityEngine.Rendering
         
         void OnEnable()
         {
+            //Debug.Log($"ProbeVolumePerSceneData: onenable {gameObject.scene.GetGUID()} {gameObject.name}" );
             #if UNITY_EDITOR
             // check if we are changing it for a companion scene WHICH IS A BIG OOPSIE NONO
             var companionSceneGuid = "00000000000000000000000000000000";

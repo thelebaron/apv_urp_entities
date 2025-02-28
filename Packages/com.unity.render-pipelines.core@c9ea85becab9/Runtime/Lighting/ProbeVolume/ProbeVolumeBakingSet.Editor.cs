@@ -545,6 +545,7 @@ namespace UnityEngine.Rendering
         // It is important this is called after UpdateSceneBounds is called otherwise SceneHasProbeVolumes might be out of date
         internal void EnsurePerSceneData(Scene scene, string sceneGUID)
         {
+            Debug.Log($" EnsurePerSceneData {sceneGUID}.");
             bool bakeDataExist = m_SceneBakeData.TryGetValue(sceneGUID, out var bakeData);
             Debug.Assert(bakeDataExist, "Scene should have been added to the baking set with default bake data instance.");
 
@@ -552,9 +553,11 @@ namespace UnityEngine.Rendering
             {
                 if (!ProbeReferenceVolume.instance.TryGetPerSceneData(sceneGUID, out var data))
                 {
+                    Debug.Log($" Moving PerSceneData to scene with GUID {sceneGUID}.");
                     GameObject go = new GameObject("ProbeVolumePerSceneData");
                     go.hideFlags |= HideFlags.HideInHierarchy;
                     var perSceneData = go.AddComponent<ProbeVolumePerSceneData>();
+                    Debug.Log($" MoveGameObjectToScene. {go}");
                     SceneManager.MoveGameObjectToScene(go, scene);
                 }
             }

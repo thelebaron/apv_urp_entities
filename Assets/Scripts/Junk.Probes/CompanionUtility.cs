@@ -32,7 +32,7 @@
             }
         }
         
-        [MenuItem("Tools/CompanionUtility/Check objects")]
+        [MenuItem("Tools/CompanionUtility/Check Main Scene objects")]
         private static void CheckObjects()
         {
             var currentScene = SceneManager.GetActiveScene();
@@ -48,10 +48,51 @@
                 //Object.DestroyImmediate(rootObject);
                 //HideInHierarchy, NotEditable, DontSaveInBuild, DontUnloadUnusedAsset
             }
-            
-            
         }
         
+        [MenuItem("Tools/CompanionUtility/Check Companion Scene objects")]
+        private static void CheckCompanionObjects()
+        {
+            var rootObjects  = GetCompanionRootObjects();
+            Debug.Log($" Companion scene length {rootObjects.Length} ");
+            //Debug.Log($"currentScene.path {currentScene.path}" );
+
+            foreach (var rootObject in rootObjects)
+            {
+                Debug.Log($" Companion.name {rootObject.name} flags:{ rootObject.gameObject.hideFlags}");
+            }
+        }
+        
+        private static GameObject[] GetCompanionRootObjects()
+        {
+            // Search all loaded assemblies for the type.
+            Type type = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("Unity.Entities.CompanionGameObjectUtility", false))
+                .FirstOrDefault(t => t != null);
+
+            if (type == null)
+            {
+                Debug.Log("CompanionGameObjectUtility type not found in loaded assemblies.");
+                return Array.Empty<GameObject>();
+            }
+
+            FieldInfo companionField      = type.GetField("_companionScene", BindingFlags.Static               | BindingFlags.NonPublic);
+            if (companionField == null)
+            {
+                Debug.Log($"CompanionGameObjectUtility companionField not found");
+                return Array.Empty<GameObject>();
+            }
+
+            Scene companionScene      = (Scene)companionField.GetValue(null);
+
+            bool companionLoaded      = companionScene.IsValid()      && companionScene.isLoaded;
+            if (!companionLoaded)
+                return Array.Empty<GameObject>();
+            
+            var rootObjects = companionScene.GetRootGameObjects();
+
+            return rootObjects;
+        }
         private static bool IsCompanionSceneLoaded()
         {
             // Search all loaded assemblies for the type.

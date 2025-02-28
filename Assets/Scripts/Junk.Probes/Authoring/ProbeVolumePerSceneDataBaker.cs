@@ -15,7 +15,7 @@ public class ProbeVolumePerSceneDataBaker : Baker<ProbeVolumePerSceneData>
             SceneGUID = authoring.sceneGUID,
             BakingSet = authoring.bakingSet
         });
-        AddComponentObject(entity, authoring.gameObject);
+        //AddComponentObject(entity, authoring.gameObject);
         AddComponent<ProbePerSceneComponentState>(entity);
         SetComponentEnabled<ProbePerSceneComponentState>(entity, false);
     }

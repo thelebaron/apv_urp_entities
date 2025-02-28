@@ -133,6 +133,7 @@ namespace Unity.Entities
 
                         var managedIndex = *(int*)(chunk.Buffer + (unityObjectTypeOffset + unityObjectTypeSizeOf * entityIndex));
                         var obj = (UnityEngine.Component)mcs.GetManagedComponent(managedIndex);
+                        //UnityEngine.Debug.Log($"obj {obj.GetType()}");
                         var authoringGameObject = obj.gameObject;
                         bool wasActive = authoringGameObject.activeSelf;
 
@@ -212,6 +213,7 @@ namespace Unity.Entities
                             #if UNITY_EDITOR
                             if (bakingSystem.IsLiveConversion())
                             {
+                                //UnityEngine.Debug.Log($"companionGameObject go {companionGameObject.name}");
                                 CompanionGameObjectUtility.MoveToCompanionScene(companionGameObject, true);
                             }
                             #endif

@@ -9,7 +9,7 @@ using UnityEngine.Rendering;
 
 namespace Junk.Probes
 {
-    [DisableAutoCreation]
+    //[DisableAutoCreation]
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
     public partial struct ProbePerSceneSystem : ISystem
     {

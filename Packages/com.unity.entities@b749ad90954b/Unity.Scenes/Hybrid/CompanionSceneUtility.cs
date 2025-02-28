@@ -82,7 +82,7 @@ namespace Unity.Entities
         {
             var scene = GetCompanionScene(isLiveConversion);
             SetCompanionFlags(gameObject);
-            UnityEngine.Debug.Log($"MoveToCompanionScene called on {gameObject.name} to {scene.name} scene path {scene.path}");
+            //UnityEngine.Debug.Log($"MoveToCompanionScene called on {gameObject.name} to {scene.name} scene path {scene.path}");
             SceneManager.MoveGameObjectToScene(gameObject, scene);
         }
 
