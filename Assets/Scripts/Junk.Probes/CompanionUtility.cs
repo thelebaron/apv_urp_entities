@@ -3,6 +3,7 @@
     using UnityEditor;
     using UnityEngine.SceneManagement;
     using System;
+    using System.Linq;
     using System.Reflection;
     using UnityEditor.SceneManagement;
     using UnityEngine;
@@ -53,14 +54,23 @@
         
         private static bool IsCompanionSceneLoaded()
         {
-            // Attempt to get the internal type from the Unity.Entities assembly
-            Type type = Type.GetType("Unity.Entities.CompanionGameObjectUtility, Unity.Entities");
+            // Search all loaded assemblies for the type.
+            Type type = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("Unity.Entities.CompanionGameObjectUtility", false))
+                .FirstOrDefault(t => t != null);
+
             if (type == null)
+            {
+                Debug.Log("CompanionGameObjectUtility type not found in loaded assemblies.");
                 return false;
+            }
 
             FieldInfo companionField      = type.GetField("_companionScene", BindingFlags.Static               | BindingFlags.NonPublic);
             if (companionField == null)
+            {
+                Debug.Log($"CompanionGameObjectUtility companionField not found");
                 return false;
+            }
 
             Scene companionScene      = (Scene)companionField.GetValue(null);
 
@@ -71,10 +81,16 @@
 
         private static bool IsCompanionSceneLiveConversionLoaded()
         {
-            // Attempt to get the internal type from the Unity.Entities assembly
-            Type type = Type.GetType("Unity.Entities.CompanionGameObjectUtility, Unity.Entities");
+            // Search all loaded assemblies for the type.
+            Type type = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("Unity.Entities.CompanionGameObjectUtility", false))
+                .FirstOrDefault(t => t != null);
+
             if (type == null)
+            {
+                Debug.Log("CompanionGameObjectUtility type not found in loaded assemblies.");
                 return false;
+            }
 
             FieldInfo liveConversionField = type.GetField("_companionSceneLiveConversion", BindingFlags.Static | BindingFlags.NonPublic);
             if (liveConversionField == null)
@@ -88,7 +104,7 @@
         }
     }
 
-/*
+
     /// <summary>
     /// This is to cleanup any go created by a system for hybrid use. Unsure how actual cleanup should happen on worldshutdown
     /// </summary>
@@ -102,7 +118,7 @@
             
         }
 
-        [MenuItem("Tools/CompanionUtility/Force delete hidden companions")]
+        [MenuItem("Tools/CompanionUtility/FORCE DELETE ORPHANED")]
         private static void CleanupTempObjects()
         {
             var currentScene = SceneManager.GetActiveScene();
@@ -126,7 +142,8 @@
                 const HideFlags combinedFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable | HideFlags.DontSaveInBuild | HideFlags.DontUnloadUnusedAsset;
                 if (rootObject.gameObject.hideFlags == combinedFlags)
                 {
-                    Object.DestroyImmediate(rootObject);
+                    Debug.Log($"found {rootObject.name} for cleanup");
+                    //Object.DestroyImmediate(rootObject);
                     continue;
                 }
             }
@@ -141,8 +158,37 @@
                 //Object.DestroyImmediate(obj.gameObject);
             }
         }
-    }
-*/
+        
+        [MenuItem("Tools/CompanionUtility/FORCE DELETE COMPANIONS")]
+        private static void CleanupCompanionObjects()
+        {
+            // Search all loaded assemblies for the type.
+            Type type = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("Unity.Entities.CompanionGameObjectUtility", false))
+                .FirstOrDefault(t => t != null);
 
+            if (type == null)
+            {
+                Debug.Log("CompanionGameObjectUtility type not found in loaded assemblies.");
+                return;
+            }
+
+            FieldInfo companionField      = type.GetField("_companionScene", BindingFlags.Static               | BindingFlags.NonPublic);
+            if (companionField == null)
+            {
+                Debug.Log("companionField not found");
+                return;
+            }
+
+            Scene companionScene      = (Scene)companionField.GetValue(null);
+
+            var rootObjects = companionScene.GetRootGameObjects();
+            Debug.Log($"Found {rootObjects.Length} companion objects in companionScene");
+            foreach (var rootObject in rootObjects)
+            {
+                Object.DestroyImmediate(rootObject);
+            }
+        }
+    }
 }
 #endif
