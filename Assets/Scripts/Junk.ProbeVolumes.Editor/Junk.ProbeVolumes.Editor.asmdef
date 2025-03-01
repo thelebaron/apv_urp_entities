@@ -1,0 +1,30 @@
+{
+    "name": "Junk.ProbeVolumes.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Entities",
+        "Unity.Collections",
+        "Unity.Mathematics",
+        "Unity.InputSystem",
+        "Unity.Burst",
+        "Unity.Entities.Graphics",
+        "Unity.Scenes",
+        "Unity.Scenes.Editor",
+        "Unity.Entities.Hybrid",
+        "Unity.Probes",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Core.Editor",
+        "Junk.ProbeVolumes"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
