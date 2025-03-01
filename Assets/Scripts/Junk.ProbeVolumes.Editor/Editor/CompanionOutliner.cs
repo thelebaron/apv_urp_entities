@@ -13,7 +13,7 @@ namespace Junk.ProbeVolumes
         Vector2 scrollPos;
         GUIStyle leftAlignedButtonStyle;
         int selectedTab = 0;
-        readonly string[] tabNames = new string[] { "Companion Scene", "Live Conversion" };
+        readonly string[] tabNames = new string[] { "Companion Scene", "Live Conversion", "Main Scene" };
 
         [MenuItem("Window/Companion Outliner")]
         public static void ShowWindow()
@@ -33,31 +33,46 @@ namespace Junk.ProbeVolumes
         {
             selectedTab = GUILayout.Toolbar(selectedTab, tabNames);
 
-            GameObject[] objectsToDisplay = selectedTab == 0 
-                ? GetCompanionRootObjects() 
-                : GetLiveConversionRootObjects();
+            GameObject[] objectsToDisplay = selectedTab switch
+            {
+                0 => GetCompanionRootObjects(),
+                1 => GetLiveConversionRootObjects(),
+                2 => GetMainSceneHiddenRootObjects(),
+                _ => Array.Empty<GameObject>()
+            };
 
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, false);
             if (objectsToDisplay.Length == 0)
             {
                 EditorGUILayout.LabelField("No objects found in the selected scene.");
             }
             else
             {
-                scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, false);
                 foreach (GameObject obj in objectsToDisplay)
                 {
                     if (obj == null)
                         continue;
 
-                    GUIContent content = EditorGUIUtility.ObjectContent(obj, typeof(GameObject));
-                    content.text = " " + obj.name;
+                    string guid = GetSceneGUID(obj.scene);
+                    string displayText = $"{obj.name} : {guid}";
+                    GUIContent content = new GUIContent(displayText, EditorGUIUtility.ObjectContent(obj, typeof(GameObject)).image);
                     if (GUILayout.Button(content, leftAlignedButtonStyle))
                     {
                         Selection.activeGameObject = obj;
                     }
                 }
-                EditorGUILayout.EndScrollView();
             }
+            EditorGUILayout.EndScrollView();
+        }
+
+        private static string GetSceneGUID(Scene scene)
+        {
+            if (scene.IsValid() && !string.IsNullOrEmpty(scene.path))
+            {
+                string guid = AssetDatabase.AssetPathToGUID(scene.path);
+                return string.IsNullOrEmpty(guid) ? "N/A" : guid;
+            }
+            return "N/A";
         }
 
         private static GameObject[] GetCompanionRootObjects()
@@ -110,6 +125,17 @@ namespace Junk.ProbeVolumes
                 return Array.Empty<GameObject>();
 
             return liveConversionScene.GetRootGameObjects();
+        }
+
+        private static GameObject[] GetMainSceneHiddenRootObjects()
+        {
+            Scene currentScene = SceneManager.GetActiveScene();
+            if (!(currentScene.IsValid() && currentScene.isLoaded))
+                return Array.Empty<GameObject>();
+
+            GameObject[] rootObjects = currentScene.GetRootGameObjects();
+            // Return only objects with hideFlags other than None.
+            return rootObjects.Where(obj => obj.hideFlags != HideFlags.None).ToArray();
         }
     }
 }

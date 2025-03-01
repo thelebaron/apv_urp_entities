@@ -11,14 +11,11 @@
         "Unity.Scenes",
         "Unity.Scenes.Editor",
         "Unity.Entities.Hybrid",
-        "Unity.Probes",
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Core.Editor",
         "Junk.ProbeVolumes"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
     "overrideReferences": false,

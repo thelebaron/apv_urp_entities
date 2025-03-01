@@ -4,12 +4,6 @@ using UnityEngine.SceneManagement;
 
 namespace Junk.ProbeVolumes
 {
-    [AddComponentMenu("")]
-    public class ProbeCompanionCleanup : MonoBehaviour
-    {
-        
-    }
-    
     public static class SceneExtensions
     {
         static PropertyInfo s_SceneGUID = typeof(Scene).GetProperty("guid", BindingFlags.NonPublic | BindingFlags.Instance);

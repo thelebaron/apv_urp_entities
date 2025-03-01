@@ -164,17 +164,7 @@
         {
             var currentScene = SceneManager.GetActiveScene();
             var rootObjects = currentScene.GetRootGameObjects();
-
-            foreach (var rootObject in rootObjects)
-            {
-                //Debug.Log($" rootObject.name {rootObject.name}");
-                if (rootObject.GetComponent<ProbeCompanionCleanup>())
-                {
-                    //Debug.Log($" Got probe {rootObject.name}");
-                    Object.DestroyImmediate(rootObject);
-                    continue;
-                }
-            }
+            
             // errors in the same loop just get it again and do second check
             rootObjects = currentScene.GetRootGameObjects();
             foreach (var rootObject in rootObjects)
@@ -183,20 +173,9 @@
                 const HideFlags combinedFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable | HideFlags.DontSaveInBuild | HideFlags.DontUnloadUnusedAsset;
                 if (rootObject.gameObject.hideFlags == combinedFlags)
                 {
-                    Debug.Log($"found {rootObject.name} for cleanup");
-                    //Object.DestroyImmediate(rootObject);
+                    Object.DestroyImmediate(rootObject);
                     continue;
                 }
-            }
-            
-            // doesnt work i guess not same scene
-            //var found = Object.FindObjectsByType<ProbeCompanionCleanup>(FindObjectsSortMode.None);
-            //Debug.Log($"found {found.Length} probes");
-            // Replace "YourTempObjectType" with your component type, or use a tag or other identifier
-            //foreach (var obj in Object.FindObjectsByType<ProbeCompanionCleanup>(FindObjectsSortMode.None))
-            {
-                //Debug.Log(obj.gameObject.name);
-                //Object.DestroyImmediate(obj.gameObject);
             }
         }
         
