@@ -45,6 +45,7 @@ namespace UnityEditor.Rendering
                 Debug.LogError($"Missing APV data asset {assetPath}. Please make sure that the lighting has been baked properly.");
                 return;
             }
+            Debug.Log($"Copying {assetPath} to {basePath}");
             File.Copy(assetPath, Path.Combine(basePath, asset.assetGUID + ".bytes"));
         }
 
@@ -109,6 +110,7 @@ namespace UnityEditor.Rendering
             foreach (var scene in buildPlayerContext.BuildPlayerOptions.scenes)
             {
                 var sceneGUID = AssetDatabase.AssetPathToGUID(scene);
+                // I think this part is where building an entity scene fails, as it doesnt take account of any subscene.
                 var bakingSet = ProbeVolumeBakingSet.GetBakingSetForScene(sceneGUID);
                 
                 Debug.Log($"PrepareForBuild scenes: sceneGUID {sceneGUID}");
