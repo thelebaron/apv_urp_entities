@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System;
 using System.Linq;
 using System.Reflection;
+using Object = UnityEngine.Object;
 
 namespace Junk.ProbeVolumes
 {
@@ -55,14 +56,34 @@ namespace Junk.ProbeVolumes
 
                     string guid = GetSceneGUID(obj.scene);
                     string displayText = $"{obj.name} : {guid}";
-                    GUIContent content = new GUIContent(displayText, EditorGUIUtility.ObjectContent(obj, typeof(GameObject)).image);
-                    if (GUILayout.Button(content, leftAlignedButtonStyle))
+
+                    EditorGUILayout.BeginHorizontal();
+                    if (GUILayout.Button(displayText, leftAlignedButtonStyle))
                     {
                         Selection.activeGameObject = obj;
                     }
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("X", GUILayout.Width(20)))
+                    {
+                        Object.DestroyImmediate(obj);
+                    }
+                    EditorGUILayout.EndHorizontal();
                 }
             }
             EditorGUILayout.EndScrollView();
+
+            // Bottom button to destroy all gameobjects in the current list
+            if (objectsToDisplay.Length > 0)
+            {
+                if (GUILayout.Button("Destroy All in Current Tab"))
+                {
+                    foreach (GameObject obj in objectsToDisplay.ToArray())
+                    {
+                        if (obj != null)
+                            Object.DestroyImmediate(obj);
+                    }
+                }
+            }
         }
 
         private static string GetSceneGUID(Scene scene)
@@ -134,7 +155,6 @@ namespace Junk.ProbeVolumes
                 return Array.Empty<GameObject>();
 
             GameObject[] rootObjects = currentScene.GetRootGameObjects();
-            // Return only objects with hideFlags other than None.
             return rootObjects.Where(obj => obj.hideFlags != HideFlags.None).ToArray();
         }
     }
