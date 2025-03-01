@@ -101,6 +101,7 @@ public class ProbeVolumeBaker : Baker<ManagedData>
 {
     public override void Bake(ManagedData authoring)
     {
+        return;
         var entity = GetEntity(TransformUsageFlags.Dynamic);
         
         if(authoring.GetComponent<ProbeVolume>() == null)

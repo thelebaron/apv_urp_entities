@@ -1,5 +1,5 @@
 {
-    "name": "Junk.Probes",
+    "name": "Junk.Probes.Editor",
     "rootNamespace": "",
     "references": [
         "Unity.Entities",
@@ -11,13 +11,16 @@
         "Unity.Scenes",
         "Unity.Scenes.Editor",
         "Unity.Entities.Hybrid",
+        "Unity.Probes",
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Core.Editor",
-        "Unity.Entities.Hybrid.HybridComponents"
+        "Junk.Probes"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,

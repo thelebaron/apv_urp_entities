@@ -8,6 +8,7 @@ public class ProbeVolumePerSceneDataBaker : Baker<ProbeVolumePerSceneData>
 {
     public override void Bake(ProbeVolumePerSceneData authoring)
     {
+        return;
         var entity = GetEntity(TransformUsageFlags.Dynamic);
         
         AddComponentObject(entity, new ProbePerSceneComponentData
