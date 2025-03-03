@@ -45,6 +45,7 @@ namespace Junk.ProbeVolumes
 
         private void Update()
         {
+            
             if (ProbeReferenceVolume.instance == null)
             {
                 Debug.Log("ProbeReferenceVolume.instance is null");
@@ -62,36 +63,6 @@ namespace Junk.ProbeVolumes
             {
                 Load();
             }
-            /*
-            #if UNITY_EDITOR
-            if (!probeDebug)
-            {
-                return;
-            }
-            // Get the internal property "probeVolumeDebug" (it's nonpublic)
-            var debugProp = typeof(ProbeReferenceVolume).GetProperty("probeVolumeDebug", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            if (debugProp != null)
-            {
-                object probeVolumeDebug = debugProp.GetValue(ProbeReferenceVolume.instance);
-                if (probeVolumeDebug == null)
-                {
-                    Debug.LogError("probeVolumeDebug is null");
-                    return;
-                }
-
-                // Get the field "drawProbes" from the probeVolumeDebug object
-                FieldInfo drawProbesField = probeVolumeDebug.GetType().GetField("drawProbes", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-
-                if (drawProbesField != null)
-                {
-                    // Toggle the value
-                    bool currentValue = (bool)drawProbesField.GetValue(probeVolumeDebug);
-                    drawProbesField.SetValue(probeVolumeDebug, probeDebug);
-                    Debug.Log("Toggled drawProbes to: " + probeDebug);
-                }
-            }
-            #endif*/
         }
     }
 }

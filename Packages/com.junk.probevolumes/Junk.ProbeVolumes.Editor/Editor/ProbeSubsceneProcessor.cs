@@ -99,6 +99,9 @@ namespace Junk.ProbeVolumes.Editor
         static string GetAPVStreamingAssetsPath()
         {
             var libraryPath = Path.GetFullPath("Assets/StreamingAssets");
+            if(!Directory.Exists(libraryPath))
+                Directory.CreateDirectory(libraryPath);
+            
             return Path.Combine(libraryPath, kAPVStreamingAssetsPath);
         }
 

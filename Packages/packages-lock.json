@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.junk.probevolumes": {
+      "version": "file:com.junk.probevolumes",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.entities.graphics": "1.4.8",
+        "com.unity.render-pipelines.universal": "17.2.0"
+      }
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.6",
       "depth": 0,

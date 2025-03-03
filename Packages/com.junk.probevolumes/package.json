@@ -1,0 +1,16 @@
+{
+  "name": "com.junk.probevolumes",
+  "description": "adaptive probe volume entities",
+  "version": "1.0.0",
+  "displayName": "Junk Adaptive Probe Volumes",
+  "type": "tool",
+  "unity": "2022.3",
+  "dependencies": {
+    "com.unity.entities.graphics": "1.4.8",
+    "com.unity.render-pipelines.universal": "17.2.0"
+  },
+  "author": {
+    "name": "thelebaron",
+    "url": "https://www.twitter.com/chrislebaron"
+  }
+}
