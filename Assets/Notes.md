@@ -65,3 +65,6 @@ With the changes included in this package(Junk.ProbeVolumes), I've successfully 
 Currently when lighting is baked, it auto opens all subscenes in a scene. This is problematic if you want two individual scenes to have separate lighting. Ive made a script that opens a 
 subscene as the main scene, bakes its lighting and then reloads the previous scene. It would be nice not to need this workaround, to open a subscene and bake its lighting on an 
 individual basis.
+
+Finally URP ProbeVolumes should be made officially compatible with Entities Graphics (ie the conditional code to support APV only exists for HDRP which I think might be a holdover from 
+APV's making their debut on HDRP)if these fixes are considered for HDRP.
