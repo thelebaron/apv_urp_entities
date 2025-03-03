@@ -38,7 +38,7 @@ namespace Junk.ProbeVolumes
             else
                 leftAlignedButtonStyle = new GUIStyle { alignment = TextAnchor.MiddleLeft };
         }
-
+        
         private void OnGUI()
         {
             selectedTab = GUILayout.Toolbar(selectedTab, tabNames);

@@ -20,7 +20,7 @@ namespace Junk.ProbeVolumes.Editor
     {
         public override void PrepareForBuild(BuildPlayerContext buildPlayerContext)
         {
-            Debug.Log("Preparing probe subscene processor");
+            //Debug.Log("Preparing probe subscene processor");
             //Debug.Log(buildPlayerContext.BuildPlayerOptions.scenes.Length);
             foreach (var scene in buildPlayerContext.BuildPlayerOptions.scenes)
             {
@@ -53,14 +53,14 @@ namespace Junk.ProbeVolumes.Editor
             var subscenes = EditorEntityScenes.GetSubScenes(rootScene.Guid);
             foreach (var subscene in subscenes)
             {
-                Debug.Log(subscene);
+                //Debug.Log(subscene);
                 var subScenePath = AssetDatabase.GUIDToAssetPath(subscene);
-                Debug.Log(subScenePath);
+                //Debug.Log(subScenePath);
                 var bakingSet = ProbeVolumeBakingSet.GetBakingSetForScene(subscene.ToString());
                 if (bakingSet != null)
                 {
                     var bakingSetPath = AssetDatabase.GetAssetPath(bakingSet);
-                    Debug.Log(bakingSetPath);
+                    //Debug.Log(bakingSetPath);
 
                     ProcessBakingSet(bakingSetPath, subscene, bakingSet);
                 }
@@ -103,7 +103,7 @@ namespace Junk.ProbeVolumes.Editor
 
         private static void ProcessBakingSet(string bakingSetPath, Hash128 subscene, ProbeVolumeBakingSet bakingSet)
         {
-            LogBakingSetGuids(bakingSet);
+            //LogBakingSetGuids(bakingSet);
             GetProbeVolumeProjectSettings(out var supportsProbeVolumes, out var maxSHBands);
             // temp
             var streamingAssetsPath = GetAPVStreamingAssetsPath();
@@ -118,7 +118,7 @@ namespace Junk.ProbeVolumes.Editor
             Directory.CreateDirectory(basePath);
 
             bool useStreamingAsset = !GraphicsSettings.GetRenderPipelineSettings<ProbeVolumeGlobalSettings>().probeVolumeDisableStreamingAssets;
-            Debug.Log("useStreamingAsset " + useStreamingAsset);
+            //Debug.Log("useStreamingAsset " + useStreamingAsset);
             IncludeStreamableAsset(bakingSet.cellSharedDataAsset, basePath, useStreamingAsset);
             IncludeStreamableAsset(bakingSet.cellBricksDataAsset, basePath, useStreamingAsset);
             IncludeStreamableAsset(bakingSet.cellSupportDataAsset, basePath, useStreamingAsset);
@@ -162,11 +162,11 @@ namespace Junk.ProbeVolumes.Editor
             var assetPath = asset.GetAssetPath();
             if (!File.Exists(assetPath))
             {
-                Debug.LogError($"Missing APV data asset {assetPath}. Please make sure that the lighting has been baked properly.");
+                //Debug.LogError($"Missing APV data asset {assetPath}. Please make sure that the lighting has been baked properly.");
                 return;
             }
 
-            Debug.Log($"Copying {assetPath} to {basePath}");
+            //Debug.Log($"Copying {assetPath} to {basePath}");
             const bool overwrite = true; // maybe add a toggle later?
             File.Copy(assetPath, Path.Combine(basePath, asset.assetGUID + ".bytes"), overwrite);
         }
