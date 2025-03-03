@@ -15,7 +15,7 @@ namespace Junk.ProbeVolumes.Editor.Editor
     {
         public static void UnloadSubscene(SubScene subScene)
         {
-            Debug.Log("UnloadSubscene");
+            //Debug.Log("UnloadSubscene");
             var loadableScenes = SubSceneInspectorUtility.GetLoadableScenes(new[] { subScene });
 
             if (loadableScenes.Length <= 0)
@@ -51,24 +51,20 @@ namespace Junk.ProbeVolumes.Editor.Editor
         }
         
 
-        public void ClearAllWorlds()
+        public static void ClearAllWorlds()
         {
             // @TODO: TEMP for debugging
-            if (GUILayout.Button("ClearWorld"))
+            World.DisposeAllWorlds();
+            DefaultWorldInitialization.Initialize("Default World", !Application.isPlaying);
+
+            var scenes = Object.FindObjectsByType<SubScene>(FindObjectsSortMode.None);
+            foreach (var scene in scenes)
             {
-                World.DisposeAllWorlds();
-                DefaultWorldInitialization.Initialize("Default World", !Application.isPlaying);
-
-                var scenes = Object.FindObjectsByType<SubScene>(FindObjectsSortMode.None);
-                foreach (var scene in scenes)
-                {
-                    var oldEnabled = scene.enabled;
-                    scene.enabled = false;
-                    scene.enabled = oldEnabled;
-                }
-
-               // EditorUpdateUtility.EditModeQueuePlayerLoopUpdate();
+                var oldEnabled = scene.enabled;
+                scene.enabled = false;
+                scene.enabled = oldEnabled;
             }
+            EditorUpdateUtility.EditModeQueuePlayerLoopUpdate();
         }
     }
 }

@@ -30,11 +30,18 @@ namespace Junk.ProbeVolumes.Editor
 #endif
             }
 
-            if (GUILayout.Button("Clear World"))
+            if (GUILayout.Button("Dispose World"))
             {
                 World.DisposeAllWorlds();
             }
 
+            if (GUILayout.Button("ClosePreviewScene"))
+            {
+                if (CompanionManager.GetCompanionScene(out var companionScene))
+                    EditorSceneManager.ClosePreviewScene(companionScene);
+                if (CompanionManager.GetCompanionSceneLiveConversion(out var companionSceneLiveConversion))
+                    EditorSceneManager.ClosePreviewScene(companionSceneLiveConversion);
+            }
             if (GUILayout.Button("unload Scene"))
             {
                 
@@ -44,12 +51,19 @@ namespace Junk.ProbeVolumes.Editor
                 SubsceneManager.UnloadSubscene(subScene.GetComponent<SubScene>());
             }
 
-            if (GUILayout.Button("close companion Scenes"))
+
+            if (GUILayout.Button("Clear World"))
             {
-                if (CompanionManager.GetCompanionScene(out var companionScene))
-                    EditorSceneManager.CloseScene(companionScene, true);
-                if (CompanionManager.GetCompanionSceneLiveConversion(out var companionSceneLiveConversion))
-                    EditorSceneManager.CloseScene(companionSceneLiveConversion, true);
+                SubsceneManager.ClearAllWorlds();
+            }
+
+            if (GUILayout.Button("MoveAllSubsceneGameObjectsToCompanionScenes"))
+            {
+
+                var lightmappedSubscene = target as LightmappedSubscene;
+                var subScene            = lightmappedSubscene?.GetComponent<SubScene>();
+                CompanionManager.RecreateCompanionScenes();
+                CompanionManager.MoveAllSubsceneGameObjectsToCompanionScene(subScene);
             }
             //base.OnInspectorGUI();
         }

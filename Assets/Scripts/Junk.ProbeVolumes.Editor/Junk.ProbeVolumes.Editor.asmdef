@@ -5,6 +5,7 @@
         "Unity.Entities",
         "Unity.Collections",
         "Unity.Mathematics",
+        "Unity.Mathematics.Extensions",
         "Unity.InputSystem",
         "Unity.Burst",
         "Unity.Entities.Graphics",

@@ -21,15 +21,15 @@ namespace Junk.ProbeVolumes.Editor
     {
         private        List<ProbeVolume> probeVolumes = new List<ProbeVolume>();
         private static SceneAsset        targetScene;
-        private static string            originalScenePath;
-        private static double            startBakeTime;
-        private static bool              hasStartedBake;
-        private static bool              isBaking;
-        private static bool              bakeResult;
-        private static string            selectedGameObjectName;
-        private static int               selectedGameObjectHash;
-        private static int               progressId;
-        static         string            openSceneGuid;
+        private static string originalScenePath;
+        private static double startBakeTime;
+        private static bool   hasStartedBake;
+        private static bool   isBaking;
+        private static bool   bakeResult;
+        private static string selectedGameObjectName;
+        private static int    selectedGameObjectHash;
+        private static int    progressId;
+        static         string openSceneGuid;
 
         [MenuItem("Window/Subscene Baker")]
         public static void ShowWindow()
@@ -43,7 +43,6 @@ namespace Junk.ProbeVolumes.Editor
         {
             var sceneAsset = subScene.SceneAsset;
             
-            
             if (isBaking)
                 return;
             isBaking       = true;
@@ -55,9 +54,10 @@ namespace Junk.ProbeVolumes.Editor
             
             SubsceneManager.UnloadSubscene(subScene);
             if (CompanionManager.GetCompanionScene(out var companionScene))
-                EditorSceneManager.CloseScene(companionScene, true);
+                EditorSceneManager.ClosePreviewScene(companionScene);
             if (CompanionManager.GetCompanionSceneLiveConversion(out var companionSceneLiveConversion))
-                EditorSceneManager.CloseScene(companionSceneLiveConversion, true);
+                EditorSceneManager.ClosePreviewScene(companionSceneLiveConversion);
+            EditorUpdateUtility.EditModeQueuePlayerLoopUpdate();
             
             var currentScene = SceneManager.GetActiveScene();
             EditorSceneManager.CloseScene(currentScene, true);
@@ -71,7 +71,7 @@ namespace Junk.ProbeVolumes.Editor
 
             string targetScenePath = AssetDatabase.GetAssetPath(targetScene);
             EditorSceneManager.OpenScene(targetScenePath, OpenSceneMode.Single);
-            EditorSceneManager.SaveOpenScenes();
+            //EditorSceneManager.SaveOpenScenes();
             window.CleanNullProbeInstances();
             window.CloseCompanionPreviewScenes();
 
@@ -123,19 +123,21 @@ namespace Junk.ProbeVolumes.Editor
                     Progress.Finish(progressId);
                 };
 
-                EditorSceneManager.SaveOpenScenes();
+                //EditorSceneManager.SaveOpenScenes();
                 EditorSceneManager.OpenScene(originalScenePath, OpenSceneMode.Single);
-                SelectSubscene();
+                var subscene = SelectSubscene();
 
                 isBaking                 =  false;
                 EditorApplication.update -= StartBake;
-                
-                //DefaultWorldInitialization.Initialize("Default World", !Application.isPlaying);
-                //GetWindow<SubsceneBakerWindow>()?.Close();
+                SubsceneManager.ClearAllWorlds();
+
+                CompanionManager.RecreateCompanionScenes();
+                CompanionManager.MoveAllSubsceneGameObjectsToCompanionScene(subscene);
+                //EditorUtility.RequestScriptReload();
             }
         }
 
-        private static void SelectSubscene()
+        private static SubScene SelectSubscene()
         {
             if (!string.IsNullOrEmpty(selectedGameObjectName))
             {
@@ -145,6 +147,8 @@ namespace Junk.ProbeVolumes.Editor
                     Selection.activeGameObject = obj;
                 }
             }
+
+            return Selection.activeGameObject.GetComponent<SubScene>();
         }
 
         private void OnGUI()
