@@ -1,25 +1,25 @@
-﻿
-#if UNITY_EDITOR
-    using UnityEditor;
-    using UnityEngine.SceneManagement;
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using UnityEditor.SceneManagement;
-    using UnityEngine;
-    using Object = UnityEngine.Object;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+using UnityEngine.SceneManagement;
+using System;
+using System.Linq;
+using System.Reflection;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
-    namespace Junk.ProbeVolumes
+namespace Junk.ProbeVolumes
 {
     public class CompanionUtility
     {
         [MenuItem("Tools/CompanionUtility/Check scene status")]
         private static void CheckSceneStatus()
         {
-            var scenes = SceneManager.sceneCount;
+            var scenes            = SceneManager.sceneCount;
             var previewSceneCount = EditorSceneManager.previewSceneCount;
-            Debug.Log($"Found {SceneManager.sceneCount} scenes and {previewSceneCount} preview scenes. CompanionScene loaded: {IsCompanionSceneLoaded()}, CompanionLiveScene loaded: {IsCompanionSceneLiveConversionLoaded()}");
-            
+            Debug.Log(
+                $"Found {SceneManager.sceneCount} scenes and {previewSceneCount} preview scenes. CompanionScene loaded: {IsCompanionSceneLoaded()}, CompanionLiveScene loaded: {IsCompanionSceneLiveConversionLoaded()}");
+
             var currentScene = SceneManager.GetActiveScene();
             var rootObjects  = currentScene.GetRootGameObjects();
             //Debug.Log($" rootObjects.Length {rootObjects.Length}       sf   "      );
@@ -28,10 +28,9 @@
             foreach (var rootObject in rootObjects)
             {
                 //Debug.Log($" rootObject.name {rootObject.name}");
-
             }
         }
-        
+
         [MenuItem("Tools/CompanionUtility/Check Main Scene objects")]
         private static void CheckObjects()
         {
@@ -42,27 +41,27 @@
 
             foreach (var rootObject in rootObjects)
             {
-                Debug.Log($" rootObject.name {rootObject.name} flags:{ rootObject.gameObject.hideFlags}");
-                
+                Debug.Log($" rootObject.name {rootObject.name} flags:{rootObject.gameObject.hideFlags}");
+
                 //if(rootObject.gameObject.hideFlags)
                 //Object.DestroyImmediate(rootObject);
                 //HideInHierarchy, NotEditable, DontSaveInBuild, DontUnloadUnusedAsset
             }
         }
-        
+
         [MenuItem("Tools/CompanionUtility/Check Companion Scene objects")]
         private static void CheckCompanionObjects()
         {
-            var rootObjects  = GetCompanionRootObjects();
+            var rootObjects = GetCompanionRootObjects();
             Debug.Log($" Companion scene length {rootObjects.Length} ");
             //Debug.Log($"currentScene.path {currentScene.path}" );
 
             foreach (var rootObject in rootObjects)
             {
-                Debug.Log($" Companion.name {rootObject.name} flags:{ rootObject.gameObject.hideFlags}");
+                Debug.Log($" Companion.name {rootObject.name} flags:{rootObject.gameObject.hideFlags}");
             }
         }
-        
+
         private static GameObject[] GetCompanionRootObjects()
         {
             // Search all loaded assemblies for the type.
@@ -76,23 +75,24 @@
                 return Array.Empty<GameObject>();
             }
 
-            FieldInfo companionField      = type.GetField("_companionScene", BindingFlags.Static               | BindingFlags.NonPublic);
+            FieldInfo companionField = type.GetField("_companionScene", BindingFlags.Static | BindingFlags.NonPublic);
             if (companionField == null)
             {
                 Debug.Log($"CompanionGameObjectUtility companionField not found");
                 return Array.Empty<GameObject>();
             }
 
-            Scene companionScene      = (Scene)companionField.GetValue(null);
+            Scene companionScene = (Scene)companionField.GetValue(null);
 
-            bool companionLoaded      = companionScene.IsValid()      && companionScene.isLoaded;
+            bool companionLoaded = companionScene.IsValid() && companionScene.isLoaded;
             if (!companionLoaded)
                 return Array.Empty<GameObject>();
-            
+
             var rootObjects = companionScene.GetRootGameObjects();
 
             return rootObjects;
         }
+
         private static bool IsCompanionSceneLoaded()
         {
             // Search all loaded assemblies for the type.
@@ -106,16 +106,16 @@
                 return false;
             }
 
-            FieldInfo companionField      = type.GetField("_companionScene", BindingFlags.Static               | BindingFlags.NonPublic);
+            FieldInfo companionField = type.GetField("_companionScene", BindingFlags.Static | BindingFlags.NonPublic);
             if (companionField == null)
             {
                 Debug.Log($"CompanionGameObjectUtility companionField not found");
                 return false;
             }
 
-            Scene companionScene      = (Scene)companionField.GetValue(null);
+            Scene companionScene = (Scene)companionField.GetValue(null);
 
-            bool companionLoaded      = companionScene.IsValid()      && companionScene.isLoaded;
+            bool companionLoaded = companionScene.IsValid() && companionScene.isLoaded;
 
             return companionLoaded;
         }
@@ -152,19 +152,17 @@
     [InitializeOnLoad]
     public static class CompanionCleanupUtility
     {
-        
         static CompanionCleanupUtility()
         {
             AssemblyReloadEvents.beforeAssemblyReload += CleanupTempObjects;
-            
         }
 
         [MenuItem("Tools/CompanionUtility/FORCE DELETE ORPHANED")]
         private static void CleanupTempObjects()
         {
             var currentScene = SceneManager.GetActiveScene();
-            var rootObjects = currentScene.GetRootGameObjects();
-            
+            var rootObjects  = currentScene.GetRootGameObjects();
+
             // errors in the same loop just get it again and do second check
             rootObjects = currentScene.GetRootGameObjects();
             foreach (var rootObject in rootObjects)
@@ -178,7 +176,7 @@
                 }
             }
         }
-        
+
         [MenuItem("Tools/CompanionUtility/FORCE DELETE COMPANIONS")]
         private static void CleanupCompanionObjects()
         {
@@ -193,14 +191,14 @@
                 return;
             }
 
-            FieldInfo companionField      = type.GetField("_companionScene", BindingFlags.Static               | BindingFlags.NonPublic);
+            FieldInfo companionField = type.GetField("_companionScene", BindingFlags.Static | BindingFlags.NonPublic);
             if (companionField == null)
             {
                 Debug.Log("companionField not found");
                 return;
             }
 
-            Scene companionScene      = (Scene)companionField.GetValue(null);
+            Scene companionScene = (Scene)companionField.GetValue(null);
 
             var rootObjects = companionScene.GetRootGameObjects();
             Debug.Log($"Found {rootObjects.Length} companion objects in companionScene");

@@ -782,11 +782,6 @@ namespace UnityEngine.Rendering
 
                 bakingSet.SetActiveScenario(bakingSet.lightingScenario, verbose: false); // Ensure we are not blending any other scenario.
                 bakingSet.BlendLightingScenario(null, 0.0f);
-
-                if(bakingSet ==null)
-                    Debug.Log( "bakingSet is null");
-                if(m_BakingSet==null)
-                    Debug.Log( "m_BakingSet set is null");
                 
                 if (i == 0)
                     m_BakingSet = bakingSet;
