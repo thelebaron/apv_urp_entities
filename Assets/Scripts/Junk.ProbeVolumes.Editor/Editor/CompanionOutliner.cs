@@ -24,10 +24,19 @@ namespace Junk.ProbeVolumes
 
         private void OnEnable()
         {
-            leftAlignedButtonStyle = new GUIStyle(EditorStyles.toolbarButton)
+            var editorStylesType = typeof(EditorStyles);
+            var currentField     = editorStylesType.GetField("s_Current", BindingFlags.Static | BindingFlags.NonPublic);
+            var currentValue     = currentField?.GetValue(null);
+
+            if (currentValue != null)
             {
-                alignment = TextAnchor.MiddleLeft
-            };
+                leftAlignedButtonStyle = new GUIStyle(EditorStyles.toolbarButton)
+                {
+                    alignment = TextAnchor.MiddleLeft
+                };
+            }
+            else
+                leftAlignedButtonStyle = new GUIStyle { alignment = TextAnchor.MiddleLeft };
         }
 
         private void OnGUI()
