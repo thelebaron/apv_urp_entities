@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Junk.ProbeVolumes;
+using Junk.ProbeVolumes.Editor.Editor;
+using Unity.Entities;
 using Unity.Scenes;
 using UnityEngine;
 using UnityEditor;
@@ -37,8 +39,11 @@ namespace Junk.ProbeVolumes.Editor
             openSceneGuid = scene.GetGuid();
         }
 
-        public static void StartBake(SceneAsset scene)
+        public static void StartBake(SubScene subScene)
         {
+            var sceneAsset = subScene.SceneAsset;
+            
+            
             if (isBaking)
                 return;
             isBaking       = true;
@@ -47,8 +52,20 @@ namespace Junk.ProbeVolumes.Editor
 
             originalScenePath = SceneManager.GetActiveScene().path;
             StoreSubscene();
+            
+            SubsceneManager.UnloadSubscene(subScene);
+            if (CompanionManager.GetCompanionScene(out var companionScene))
+                EditorSceneManager.CloseScene(companionScene, true);
+            if (CompanionManager.GetCompanionSceneLiveConversion(out var companionSceneLiveConversion))
+                EditorSceneManager.CloseScene(companionSceneLiveConversion, true);
+            
+            var currentScene = SceneManager.GetActiveScene();
+            EditorSceneManager.CloseScene(currentScene, true);
+            
+            //World.DisposeAllWorlds();
+            EditorUpdateUtility.EditModeQueuePlayerLoopUpdate();
 
-            targetScene = scene;
+            targetScene = sceneAsset;
             SubsceneBakerWindow window = GetWindow<SubsceneBakerWindow>("Scene Baker");
             window.Show();
 
@@ -112,6 +129,8 @@ namespace Junk.ProbeVolumes.Editor
 
                 isBaking                 =  false;
                 EditorApplication.update -= StartBake;
+                
+                //DefaultWorldInitialization.Initialize("Default World", !Application.isPlaying);
                 //GetWindow<SubsceneBakerWindow>()?.Close();
             }
         }
@@ -138,7 +157,7 @@ namespace Junk.ProbeVolumes.Editor
                 {
                     if (GUILayout.Button("Bake subscene lighting"))
                     {
-                        SubsceneBakerWindow.StartBake(subscene.SceneAsset);
+                        SubsceneBakerWindow.StartBake(subscene);
                     }
                 }
             }
