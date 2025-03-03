@@ -1,8 +1,7 @@
-﻿#if UNITY_EDITOR
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Junk.Scenes.Editor;
 using Unity.Scenes;
 using UnityEngine;
 using UnityEditor;
@@ -48,7 +47,7 @@ namespace Junk.ProbeVolumes.Editor
             originalScenePath = SceneManager.GetActiveScene().path;
             StoreSubscene();
             
-            SubsceneManager.UnloadSubscene(subScene);
+            EditorSubsceneManager.UnloadSubscene(subScene);
             if (CompanionManager.GetCompanionScene(out var companionScene))
                 EditorSceneManager.ClosePreviewScene(companionScene);
             if (CompanionManager.GetCompanionSceneLiveConversion(out var companionSceneLiveConversion))
@@ -125,7 +124,7 @@ namespace Junk.ProbeVolumes.Editor
 
                 isBaking                 =  false;
                 EditorApplication.update -= StartBake;
-                SubsceneManager.ClearAllWorlds();
+                EditorSubsceneManager.ClearAllWorlds();
 
                 CompanionManager.RecreateCompanionScenes();
                 CompanionManager.MoveAllSubsceneGameObjectsToCompanionScene(subscene);
@@ -309,5 +308,3 @@ namespace Junk.ProbeVolumes.Editor
         }
     }
 }
-
-#endif

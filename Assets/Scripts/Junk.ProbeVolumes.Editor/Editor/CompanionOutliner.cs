@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using Object = UnityEngine.Object;
 
-namespace Junk.ProbeVolumes
+namespace Junk.ProbeVolumes.Editor
 {
-    public class CompanionOutliner : EditorWindow
+    internal class CompanionOutliner : EditorWindow
     {
         Vector2 scrollPos;
         GUIStyle leftAlignedButtonStyle;

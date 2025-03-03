@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace Junk.ProbeVolumes
 {
+    [AddComponentMenu("")]
     public class SceneChecker : MonoBehaviour
     {
         public List<ProbeVolume> probeVolumes;

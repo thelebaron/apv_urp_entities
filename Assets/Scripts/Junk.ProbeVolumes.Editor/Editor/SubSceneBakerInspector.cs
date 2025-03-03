@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿
 using Junk.ProbeVolumes.Hybrid;
 using Unity.Entities;
 using Unity.Scenes;
@@ -22,11 +22,10 @@ namespace Junk.ProbeVolumes.Editor
                 var subScene   = lightmappedSubscene?.GetComponent<SubScene>();
                 if (subScene == null)
                     return;
-#if UNITY_EDITOR
                 SubsceneBakerWindow.StartBake(subScene);
-#endif
             }
 
+            /*
             if (GUILayout.Button("Dispose World"))
             {
                 World.DisposeAllWorlds();
@@ -61,10 +60,8 @@ namespace Junk.ProbeVolumes.Editor
                 var subScene            = lightmappedSubscene?.GetComponent<SubScene>();
                 CompanionManager.RecreateCompanionScenes();
                 CompanionManager.MoveAllSubsceneGameObjectsToCompanionScene(subScene);
-            }
+            }*/
             //base.OnInspectorGUI();
         }
     }
 }
-
-#endif

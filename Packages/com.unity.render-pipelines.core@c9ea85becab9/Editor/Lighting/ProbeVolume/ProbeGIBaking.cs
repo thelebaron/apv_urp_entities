@@ -759,7 +759,7 @@ namespace UnityEngine.Rendering
                 var scene = data.gameObject.scene;
                 var sceneGUID = scene.GetGUID();
                 var bakingSet = ProbeVolumeBakingSet.GetBakingSetForScene(sceneGUID);
-                Debug.Log( "perSceneData sceneGUID " + sceneGUID);
+                //Debug.Log( "perSceneData sceneGUID " + sceneGUID);
 
                 if (sceneGUID == "00000000000000000000000000000000")
                 {

@@ -8,33 +8,56 @@ using System.Reflection;
 using Unity.Scenes.Editor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Hash128 = Unity.Entities.Hash128;
 
 namespace Junk.ProbeVolumes.Editor
 {
-    // see ProbeVolumeBuildProcessor & EntitySceneBuildPlayerProcessor if anything changes
+    // see ProbeVolumeBuildProcessor & EntitySceneBuildPlayerProcessor if anything breaks
+    // Last aligned for Entities 1.3.10 and Core RP 17.2.0
     public class ProbeSubsceneProcessor : BuildPlayerProcessor, IPostprocessBuildWithReport
     {
         public override void PrepareForBuild(BuildPlayerContext buildPlayerContext)
         {
-            //Debug.Log("Preparing probe subscene processor");
-            //Debug.Log(buildPlayerContext.BuildPlayerOptions.scenes.Length);
             foreach (var scene in buildPlayerContext.BuildPlayerOptions.scenes)
             {
-                //Debug.Log(scene);
+                BuildScene(scene);
             }
-            //Debug.Log("Finished probe subscene processor");
-            Build();
         }
 
         public void OnPostprocessBuild(BuildReport report)
         {
+            // todo copy build report stuff from core rp 
         }
 
-        [MenuItem("Tools/Build")]
+        private static void BuildScene(string scenePath)
+        {
+            var sceneGuid = AssetDatabase.GUIDFromAssetPath(scenePath);
+            var rootScene = new RootSceneInfo
+            {
+                Guid = sceneGuid,
+                Path = scenePath
+            };
+
+            var subscenes = EditorEntityScenes.GetSubScenes(rootScene.Guid);
+            if(subscenes.Length == 0)
+                return;
+            
+            foreach (var subscene in subscenes)
+            {
+                var subScenePath = AssetDatabase.GUIDToAssetPath(subscene);
+                var bakingSet = ProbeVolumeBakingSet.GetBakingSetForScene(subscene.ToString());
+                if (bakingSet != null)
+                {
+                    var bakingSetPath = AssetDatabase.GetAssetPath(bakingSet);
+                    ProcessBakingSet(bakingSetPath, subscene, bakingSet);
+                }
+            }
+        }
+        
+        // Unused but kept as reference
+        //[MenuItem("Tools/Build")]
         static void Build()
         {
             // Retrieve list of subscenes to import from the root scenes added to the player settings
@@ -53,22 +76,15 @@ namespace Junk.ProbeVolumes.Editor
             var subscenes = EditorEntityScenes.GetSubScenes(rootScene.Guid);
             foreach (var subscene in subscenes)
             {
-                //Debug.Log(subscene);
                 var subScenePath = AssetDatabase.GUIDToAssetPath(subscene);
                 //Debug.Log(subScenePath);
                 var bakingSet = ProbeVolumeBakingSet.GetBakingSetForScene(subscene.ToString());
                 if (bakingSet != null)
                 {
                     var bakingSetPath = AssetDatabase.GetAssetPath(bakingSet);
-                    //Debug.Log(bakingSetPath);
-
                     ProcessBakingSet(bakingSetPath, subscene, bakingSet);
                 }
             }
-
-            // I think this part is where building an entity scene fails, as it doesnt take account of any subscene.
-
-            var types = TypeCache.GetTypesDerivedFrom<IEntitySceneBuildAdditions>();
         }
 
         const string kTempAPVStreamingAssetsPath = "TempAPVStreamingAssets";
@@ -122,6 +138,9 @@ namespace Junk.ProbeVolumes.Editor
             IncludeStreamableAsset(bakingSet.cellSharedDataAsset, basePath, useStreamingAsset);
             IncludeStreamableAsset(bakingSet.cellBricksDataAsset, basePath, useStreamingAsset);
             IncludeStreamableAsset(bakingSet.cellSupportDataAsset, basePath, useStreamingAsset);
+            
+            // This comment is from the core package, but stripping it prevents probe data being built for use with the subscene
+            //
             // For now we always strip support data in build as it's mostly unsupported.
             // Later we'll need a proper option to strip it or not.
             /*bool stripSupportData = true;
@@ -202,7 +221,7 @@ namespace Junk.ProbeVolumes.Editor
         public Hash128 Guid;
     }
 
-    public static class BuildHelper
+    internal static class BuildHelper
     {
         public static string[] GetScenePaths()
         {

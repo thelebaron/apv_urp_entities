@@ -5,7 +5,8 @@ using UnityEngine.Rendering;
 namespace Junk.ProbeVolumes
 {
     [ExecuteAlways]
-    public class ProbeSetLoadingTester : MonoBehaviour
+    [AddComponentMenu("")]
+    internal class ProbeSetLoadingTester : MonoBehaviour
     {
         public UnityEngine.Rendering.ProbeVolumeBakingSet set;
         public UnityEngine.Rendering.ProbeVolumeBakingSet loadedSet;

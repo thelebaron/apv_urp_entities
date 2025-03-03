@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Junk.ProbeVolumes.Editor
 {
-    public class SubsceneManager
+    public class EditorSubsceneManager
     {
         public static void UnloadSubscene(SubScene subScene)
         {
