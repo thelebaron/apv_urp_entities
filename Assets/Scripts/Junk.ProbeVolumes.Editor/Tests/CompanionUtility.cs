@@ -1,18 +1,19 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
+﻿/*
+#if UNITY_EDITOR
 using UnityEngine.SceneManagement;
 using System;
 using System.Linq;
 using System.Reflection;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Junk.ProbeVolumes
 {
-    public class CompanionUtility
+    [Obsolete]
+    internal class CompanionUtility
     {
-        [MenuItem("Tools/CompanionUtility/Check scene status")]
+        //[MenuItem("Tools/CompanionUtility/Check scene status")]
         private static void CheckSceneStatus()
         {
             var scenes            = SceneManager.sceneCount;
@@ -31,7 +32,7 @@ namespace Junk.ProbeVolumes
             }
         }
 
-        [MenuItem("Tools/CompanionUtility/Check Main Scene objects")]
+        //[MenuItem("Tools/CompanionUtility/Check Main Scene objects")]
         private static void CheckObjects()
         {
             var currentScene = SceneManager.GetActiveScene();
@@ -49,7 +50,7 @@ namespace Junk.ProbeVolumes
             }
         }
 
-        [MenuItem("Tools/CompanionUtility/Check Companion Scene objects")]
+        //[MenuItem("Tools/CompanionUtility/Check Companion Scene objects")]
         private static void CheckCompanionObjects()
         {
             var rootObjects = GetCompanionRootObjects();
@@ -145,7 +146,7 @@ namespace Junk.ProbeVolumes
         }
     }
 
-
+    
     /// <summary>
     /// This is to cleanup any go created by a system for hybrid use. Unsure how actual cleanup should happen on worldshutdown
     /// </summary>
@@ -210,3 +211,4 @@ namespace Junk.ProbeVolumes
     }
 }
 #endif
+*/

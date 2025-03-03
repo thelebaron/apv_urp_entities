@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Junk.ProbeVolumes.Editor
+namespace Junk.Scenes.Editor
 {
 #if UNITY_EDITOR
     // copied from Unity.Scenes.EditorUpdateUtility

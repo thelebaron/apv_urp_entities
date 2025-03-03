@@ -1,9 +1,7 @@
-﻿using System;
-using System.Reflection;
+﻿using Junk.Scenes.Editor;
 using Unity.Entities;
 using Unity.Scenes;
 using Unity.Scenes.Editor;
-using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,8 +25,7 @@ namespace Junk.ProbeVolumes.Editor
                 Unload(entityManager, subScene, loadableScene);
             }
         }
-
-
+        
         public void RemoveSceneFromHierarchy(Scene scene)
         {
             if (scene.IsValid())
