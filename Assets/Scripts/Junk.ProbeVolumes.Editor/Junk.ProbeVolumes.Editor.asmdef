@@ -14,7 +14,6 @@
         "Unity.Entities.Hybrid",
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Core.Editor",
-        "Junk.ProbeVolumes.Hybrid",
         "Junk.ProbeVolumes"
     ],
     "includePlatforms": [

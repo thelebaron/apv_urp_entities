@@ -1,13 +1,10 @@
 ﻿#if UNITY_EDITOR
-
-using Junk.ProbeVolumes.Editor.Editor;
 using Junk.ProbeVolumes.Hybrid;
 using Unity.Entities;
 using Unity.Scenes;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace Junk.ProbeVolumes.Editor
 {
